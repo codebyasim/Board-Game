@@ -9,8 +9,10 @@ public class HardGameFactory implements GameFactory {
 
     @Override
     public PlayerSelector createPlayerSelector(Player[] players) {
-        return new RandomSelector(players); // unpredictable
-    }
+    //    return new RandomSelector(players); // unpredictable
+        return new RandomNoRepeatSelector(players);
+   }
+
 
     @Override
     public HitStrategy createHitStrategy() {

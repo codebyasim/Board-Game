@@ -1,5 +1,7 @@
-
 package Game;
+
+import java.util.Stack;
+
 
 public class Main {
 
@@ -13,6 +15,7 @@ public class Main {
         game.play(); // GameOver
     }
 
+    //java.util.Stack<Command> history = new java.util.Stack<>();//week
     // 🔹 Your full game logic moved here
     public static void runGame() {
 
@@ -37,6 +40,8 @@ public class Main {
         HitStrategy hitStrategy = factory.createHitStrategy();
         TeleportStrategy teleportStrategy = factory.createTeleportStrategy();
         GameObserver observer = new ConsoleObserver();
+
+        java.util.Stack<Command> history = new java.util.Stack<>();
 
         int round = 1;
         int totalPlays = 0;
@@ -63,7 +68,7 @@ public class Main {
 
             if (playTurn(name, current, shaker,
                     others[0], others[1], others[2],
-                    round, hitStrategy, teleportStrategy, observer)) {
+                    round, hitStrategy, teleportStrategy, observer,  history)) {
                 break;
             }
 
@@ -81,7 +86,7 @@ public class Main {
                                    Player p1, Player p2, Player p3,
                                    int round, HitStrategy hitStrategy,
                                    TeleportStrategy teleportStrategy,
-                                   GameObserver observer ) {
+                                   GameObserver observer,Stack<Command> history ) {
 
         for (int roll : new DiceIterable(shaker)) {
 
@@ -90,14 +95,17 @@ public class Main {
 
             observer.onRoll(name, round, roll);
 
-            player.advance(roll, name);
+            Command move = new AdvanceCommand(player, roll, name);
+            move.execute();
+            history.push(move);
 
-
-            teleportStrategy.apply(player, name, observer);
-
+            // Bounce first
             if (oldIndex + roll > 35) {
                 observer.onBounce(name, player.getPosition());
             }
+
+            //Then teleport
+            teleportStrategy.apply(player, name, observer);
 
             if (hitStrategy.apply(player, observer, p1, p2, p3)) {
                 player.setIndex(oldIndex);
