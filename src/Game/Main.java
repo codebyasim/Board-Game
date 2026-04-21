@@ -1,25 +1,35 @@
+
 package Game;
 
 public class Main {
 
+    // 🔹 Main only controls states
     public static void main(String[] args) {
 
+        GameContext game = new GameContext(new StartState());
+
+        game.play(); // Start
+        game.play(); // Playing
+        game.play(); // GameOver
+    }
+
+    // 🔹 Your full game logic moved here
+    public static void runGame() {
 
         Player red = new Red();
         Player blue = new Blue();
         Player green = new Green();
         Player yellow = new Yellow();
-        //L4S Factory
+
         GameFactory factory;
-        // choose mode
-        int option = 1;
+        int option = 1; // 1 = Easy, 2 = Hard
 
         if (option == 1) {
             factory = new EasyGameFactory();
         } else {
             factory = new HardGameFactory();
         }
-        // create everything from factory
+
         Player[] players = {red, blue, green, yellow};
 
         DiceShaker shaker = factory.createDiceShaker();
@@ -28,7 +38,6 @@ public class Main {
         TeleportStrategy teleportStrategy = factory.createTeleportStrategy();
 
         int round = 1;
-        //count total plays
         int totalPlays = 0;
 
         String mode = (option == 1) ? "Easy" : "Hard";
@@ -40,38 +49,38 @@ public class Main {
         System.out.println("Yellow: " + yellow);
         System.out.println();
 
-            while (true) {
+        while (true) {
 
-                Player current = selector.next();
-                totalPlays++;
+            Player current = selector.next();
+            totalPlays++;
 
-                String name = current.getClass().getSimpleName();
+            String name = current.getClass().getSimpleName();
 
-                // pass other players
-                Player[] others = java.util.Arrays.stream(players)
-                        .filter(p -> p != current)
-                        .toArray(Player[]::new);
+            Player[] others = java.util.Arrays.stream(players)
+                    .filter(p -> p != current)
+                    .toArray(Player[]::new);
 
-                if (playTurn(name, current, shaker, others[0], others[1], others[2], round, hitStrategy,
-                         teleportStrategy)) {
-                    break;
-                }
-
-                // increase round after full cycle
-                if (current == players[players.length - 1]) {
-                    round++;
-                    System.out.println();
-                }
+            if (playTurn(name, current, shaker,
+                    others[0], others[1], others[2],
+                    round, hitStrategy, teleportStrategy)) {
+                break;
             }
-        //print total plays at end
+
+            if (current == players[players.length - 1]) {
+                round++;
+                System.out.println();
+            }
+        }
+
         System.out.println("Total plays " + totalPlays);
     }
 
+    // 🔹 Keep playTurn separate (good design)
     public static boolean playTurn(String name, Player player, DiceShaker shaker,
-                                   Player p1, Player p2, Player p3, int round, HitStrategy hitStrategy,
+                                   Player p1, Player p2, Player p3,
+                                   int round, HitStrategy hitStrategy,
                                    TeleportStrategy teleportStrategy) {
 
-        //Iterator from L2S
         for (int roll : new DiceIterable(shaker)) {
 
             int oldPos = player.getPosition();
@@ -81,7 +90,6 @@ public class Main {
 
             player.advance(roll, name);
 
-            // L3S Teleport + Hit Strategy calls
             teleportStrategy.apply(player, name);
 
             if (hitStrategy.apply(player, p1, p2, p3)) {
@@ -96,7 +104,7 @@ public class Main {
                 return true;
             }
 
-            break; // IMPORTANT
+            break;
         }
         return false;
     }
