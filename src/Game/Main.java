@@ -22,7 +22,7 @@ public class Main {
         Player yellow = new Yellow();
 
         GameFactory factory;
-        int option = 1; // 1 = Easy, 2 = Hard
+        int option = 2; // 1 = Easy, 2 = Hard
 
         if (option == 1) {
             factory = new EasyGameFactory();
@@ -36,6 +36,7 @@ public class Main {
         PlayerSelector selector = factory.createPlayerSelector(players);
         HitStrategy hitStrategy = factory.createHitStrategy();
         TeleportStrategy teleportStrategy = factory.createTeleportStrategy();
+        GameObserver observer = new ConsoleObserver();
 
         int round = 1;
         int totalPlays = 0;
@@ -62,7 +63,7 @@ public class Main {
 
             if (playTurn(name, current, shaker,
                     others[0], others[1], others[2],
-                    round, hitStrategy, teleportStrategy)) {
+                    round, hitStrategy, teleportStrategy, observer)) {
                 break;
             }
 
@@ -79,28 +80,34 @@ public class Main {
     public static boolean playTurn(String name, Player player, DiceShaker shaker,
                                    Player p1, Player p2, Player p3,
                                    int round, HitStrategy hitStrategy,
-                                   TeleportStrategy teleportStrategy) {
+                                   TeleportStrategy teleportStrategy,
+                                   GameObserver observer ) {
 
         for (int roll : new DiceIterable(shaker)) {
 
             int oldPos = player.getPosition();
             int oldIndex = player.getIndex();
 
-            System.out.println(name + " play " + round + " rolls " + roll);
+            observer.onRoll(name, round, roll);
 
             player.advance(roll, name);
 
-            teleportStrategy.apply(player, name);
 
-            if (hitStrategy.apply(player, p1, p2, p3)) {
-                System.out.println("💥 " + name + " HIT! stays at " + oldPos);
+            teleportStrategy.apply(player, name, observer);
+
+            if (oldIndex + roll > 35) {
+                observer.onBounce(name, player.getPosition());
+            }
+
+            if (hitStrategy.apply(player, observer, p1, p2, p3)) {
                 player.setIndex(oldIndex);
             }
 
-            System.out.println(name + " moves from " + oldPos + " to " + player);
+
+            observer.onMove(name, oldPos, player.getPosition());
 
             if (player.isAtEnd()) {
-                System.out.println(name + " wins in " + round + " rounds");
+                observer.onWin(name, round);
                 return true;
             }
 

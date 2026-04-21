@@ -35,7 +35,6 @@ public abstract class Player implements Comparable<Player> {
         if (currentIndex > 35) {
             int extra = currentIndex - 35;
             currentIndex = 35 - extra;
-            System.out.println("↩️ " + name + " bounced to " + getPosition());
         }
     }
     // Shows all player home positions
