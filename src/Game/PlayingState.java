@@ -4,6 +4,10 @@ import java.util.Stack;
 
 public class PlayingState implements GameState {
 
+    // ✅ state internal data
+    private int round = 1;
+    private int totalPlays = 0;
+
     @Override
     public void play(GameContext context) {
 
@@ -14,7 +18,7 @@ public class PlayingState implements GameState {
         Player green = new Green();
         Player yellow = new Yellow();
 
-        GameFactory factory = context.getFactory(); // can improve later (DIP)
+        GameFactory factory = context.getFactory();
 
         Player[] players = {red, blue, green, yellow};
 
@@ -27,13 +31,10 @@ public class PlayingState implements GameState {
 
         Stack<Command> history = new Stack<>();
 
-        int round = 1;
-        int totalPlays = 0;
-
         while (true) {
 
             Player current = selector.next();
-            totalPlays++;
+            totalPlays++; // ✅ now stored in state
 
             String name = current.getClass().getSimpleName();
 
@@ -46,7 +47,7 @@ public class PlayingState implements GameState {
                 boolean finished = mediator.handleTurn(
                         name, current, roll,
                         others[0], others[1], others[2],
-                        round,
+                        round, // ✅ uses state field
                         hitStrategy,
                         teleportStrategy,
                         observer,
@@ -60,13 +61,17 @@ public class PlayingState implements GameState {
                     return;
                 }
 
-                break; // one roll per turn
+                break;
             }
 
             if (current == players[players.length - 1]) {
-                round++;
+                round++; // ✅ persists inside state
                 System.out.println();
             }
         }
     }
 }
+
+
+
+
