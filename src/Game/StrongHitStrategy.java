@@ -15,7 +15,7 @@ public class StrongHitStrategy implements HitStrategy {
                 String victim = p.getClass().getSimpleName();
 
                 // notify observer
-                observer.onHit(attacker, victim);
+                observer.onStrongHit(attacker, victim);
 
                 return false; // current player stays
             }

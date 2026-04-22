@@ -25,7 +25,7 @@ public class Main {
         Player yellow = new Yellow();
 
         GameFactory factory;
-        int option = 2; // 1 = Easy, 2 = Hard
+        int option = 1; // 1 = Easy, 2 = Hard
 
         if (option == 1) {
             factory = new EasyGameFactory();

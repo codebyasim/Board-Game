@@ -4,7 +4,11 @@ public class HardGameFactory implements GameFactory {
 
     @Override
     public DiceShaker createDiceShaker() {
-        return new RandomDoubleDiceShaker(); // harder
+        return new DiceShakerDecorator(
+                new DiceShakerDecorator(
+                        new RandomSingleDiceShaker()
+                )
+        );
     }
 
     @Override

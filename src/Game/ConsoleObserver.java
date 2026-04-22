@@ -29,6 +29,11 @@ public class ConsoleObserver implements GameObserver {
 
     @Override
     public void onHit(String attacker, String victim) {
+        System.out.println("💥 " + attacker + " hit " + victim);
+    }
+
+    @Override
+    public void onStrongHit(String attacker, String victim) {
         System.out.println("💥 " + attacker + " hit " + victim + " → " + victim + " goes HOME");
     }
 }
