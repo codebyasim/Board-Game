@@ -8,11 +8,8 @@ public class Main {
     // 🔹 Main only controls states
     public static void main(String[] args) {
 
-        GameContext game = new GameContext(new StartState());
-
-        game.play(); // Start
-        game.play(); // Playing
-        game.play(); // GameOver
+        GameFacade facade = new GameFacade();
+        facade.play();   // 👉 client only calls this
     }
 
     //java.util.Stack<Command> history = new java.util.Stack<>();//week
@@ -40,6 +37,7 @@ public class Main {
         HitStrategy hitStrategy = factory.createHitStrategy();
         TeleportStrategy teleportStrategy = factory.createTeleportStrategy();
         GameObserver observer = new ConsoleObserver();
+        GameMediator mediator = new GameMediator();
 
         java.util.Stack<Command> history = new java.util.Stack<>();
 
@@ -68,7 +66,7 @@ public class Main {
 
             if (playTurn(name, current, shaker,
                     others[0], others[1], others[2],
-                    round, hitStrategy, teleportStrategy, observer,  history)) {
+                    round, hitStrategy, teleportStrategy, observer, history, mediator)) {
                 break;
             }
 
@@ -81,46 +79,30 @@ public class Main {
         System.out.println("Total plays " + totalPlays);
     }
 
-    // 🔹 Keep playTurn separate (good design)
+
     public static boolean playTurn(String name, Player player, DiceShaker shaker,
                                    Player p1, Player p2, Player p3,
                                    int round, HitStrategy hitStrategy,
                                    TeleportStrategy teleportStrategy,
-                                   GameObserver observer,Stack<Command> history ) {
+                                   GameObserver observer,
+                                   Stack<Command> history,
+                                   GameMediator mediator) {
 
         for (int roll : new DiceIterable(shaker)) {
-
-            int oldPos = player.getPosition();
-            int oldIndex = player.getIndex();
-
-            observer.onRoll(name, round, roll);
-
-            Command move = new AdvanceCommand(player, roll, name);
-            move.execute();
-            history.push(move);
-
-            // Bounce first
-            if (oldIndex + roll > 35) {
-                observer.onBounce(name, player.getPosition());
-            }
-
-            //Then teleport
-            teleportStrategy.apply(player, name, observer);
-
-            if (hitStrategy.apply(player, observer, p1, p2, p3)) {
-                player.setIndex(oldIndex);
-            }
-
-
-            observer.onMove(name, oldPos, player.getPosition());
-
-            if (player.isAtEnd()) {
-                observer.onWin(name, round);
-                return true;
-            }
-
-            break;
+            return mediator.handleTurn(
+                    name, player, roll,
+                    p1, p2, p3,
+                    round,
+                    hitStrategy,
+                    teleportStrategy,
+                    observer,
+                    history
+            );
         }
         return false;
     }
 }
+
+
+
+
