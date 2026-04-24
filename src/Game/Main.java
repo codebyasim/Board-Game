@@ -4,11 +4,13 @@ public class Main {
 
     public static void main(String[] args) {
 
-        GameFacade facade = new GameFacade();
+        // 🔹 choose implementation here Easy and Hard game
+        //GameFactory factory = new HardGameFactory();
+         GameFactory factory = new EasyGameFactory();
+
+        // 🔹 inject into facade
+        GameFacade facade = new GameFacade(factory);
+
         facade.play();   // only entry point
     }
 }
-
-
-
-
