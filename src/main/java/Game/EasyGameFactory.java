@@ -1,5 +1,7 @@
 package Game;
 
+import application.*;
+
 public class EasyGameFactory implements GameFactory {
 
     @Override
