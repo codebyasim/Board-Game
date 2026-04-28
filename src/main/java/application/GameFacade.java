@@ -1,103 +1,39 @@
 
-//package application;
-//
-//import Game.EasyGameFactory;
-//import Game.GameFactory;
-//import org.springframework.stereotype.Component;
-//
-//
-//
-//@Component
-//public class GameFacade implements GameService {
-//
-//    private final GameFactory factory;
-//
-//    public GameFacade(GameFactory factory) {
-//        this.factory = factory;
-//    }
-//
-//    @Override
-//    public void playGame() {
-//        play();
-//    }
-//
-//    public void play() {
-//        String mode = (factory instanceof EasyGameFactory) ? "Easy" : "Hard";
-//        System.out.println("Game Mode: " + mode);
-//
-//        GameContext game = new GameContext(new StartState(), factory);
-//
-//        game.play();
-//        game.play();
-//        game.play();
-//    }
-//}
-
-
-
-
-//@Component
-//public class GameFacade {
-//
-//    private final GameFactory factory;
-//
-//    //  constructor injection (Spring will provide it)
-//    public GameFacade(GameFactory factory) {
-//        this.factory = factory;
-//    }
-//
-//
-//
-//    public void play() {
-//        String mode = (factory instanceof EasyGameFactory) ? "Easy" : "Hard";
-//        System.out.println("Game Mode: " + mode);
-//
-//        GameContext game = new GameContext(new StartState(), factory);
-//
-//        game.play();
-//        game.play();
-//        game.play();
-//    }
-//}
-
-
 package application;
 
-import Game.EasyGameFactory;
-import Game.GameFactory;
+import org.springframework.core.env.Environment;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 @Component
 public class GameFacade implements GameService {
 
-    private final GameFactory factory;
-    private final GameRepository repository;
+    private final application.usecase.startgame.Provided startGame;
+    private final application.usecase.playturn.Provided playTurn;
+    private final application.usecase.endgame.Provided endGame;
+    private final Environment env;
 
-    // ✅ Constructor injection (Spring will provide both)
-    public GameFacade(GameFactory factory, GameRepository repository) {
-        this.factory = factory;
-        this.repository = repository;
+    public GameFacade(
+            Environment env,
+            @Qualifier("startGame") application.usecase.startgame.Provided startGame,
+            @Qualifier("playTurn") application.usecase.playturn.Provided playTurn,
+            @Qualifier("endGame") application.usecase.endgame.Provided endGame
+    ) {
+        this.env = env;
+        this.startGame = startGame;
+        this.playTurn = playTurn;
+        this.endGame = endGame;
     }
 
     @Override
     public void playGame() {
-        play();
-    }
 
-    public void play() {
-        String mode = (factory instanceof EasyGameFactory) ? "Easy" : "Hard";
-        System.out.println("Game Mode: " + mode);
+        String mode = env.getActiveProfiles()[0]; // gets easy/hard
 
-        // Example usage of repository (simple demo)
-        repository.saveGame("Game started in " + mode + " mode");
+        startGame.handle(new application.usecase.startgame.Request(mode));
 
-        GameContext game = new GameContext(new StartState(), factory);
+        playTurn.handle(new application.usecase.playturn.Request(1));
 
-        game.play();
-        game.play();
-        game.play();
-
-        // Example load (optional)
-        System.out.println("Saved State: " + repository.loadGame());
+        endGame.handle(new application.usecase.endgame.Request());
     }
 }

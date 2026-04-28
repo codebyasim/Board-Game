@@ -1,6 +1,7 @@
 package application;
 
 import Game.GameFactory;
+import application.GameState;
 
 public class GameContext {
 

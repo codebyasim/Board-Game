@@ -34,6 +34,6 @@ public class ConsoleObserver implements GameObserver {
 
     @Override
     public void onStrongHit(String attacker, String victim) {
-        System.out.println("💥 " + attacker + " hit " + victim + " → " + victim + " goes HOME");
+        System.out.println("💥 STRONG HIT:" + attacker + " hit " + victim + " → " + victim + " goes HOME");
     }
 }
