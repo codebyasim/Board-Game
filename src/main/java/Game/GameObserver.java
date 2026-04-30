@@ -1,4 +1,4 @@
-package Game;
+package game;
 
 public interface GameObserver {
     void onMove(String player, int from, int to);

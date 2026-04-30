@@ -1,6 +1,6 @@
 package application;
 
-import Game.GameFactory;
+import game.GameFactory;
 import application.GameState;
 
 public class GameContext {

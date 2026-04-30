@@ -1,6 +1,6 @@
 package application;
 
-import Game.*;
+import game.*;
 
 public class GameMediator {
 

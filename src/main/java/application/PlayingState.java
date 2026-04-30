@@ -1,6 +1,6 @@
 package application;
 
-import Game.*;
+import game.*;
 
 import java.util.Stack;
 

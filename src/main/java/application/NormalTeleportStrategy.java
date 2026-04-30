@@ -1,6 +1,6 @@
 package application;
 
-import Game.GameObserver;
+import game.GameObserver;
 
 public class NormalTeleportStrategy implements TeleportStrategy {
 

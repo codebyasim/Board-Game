@@ -1,8 +1,8 @@
 package application.usecase.startgame;
 
-import Game.EasyGameFactory;
+import game.EasyGameFactory;
 import application.GameContext;
-import Game.GameFactory;
+import game.GameFactory;
 import application.GameSession;
 import application.StartState;
 import org.springframework.stereotype.Component;
