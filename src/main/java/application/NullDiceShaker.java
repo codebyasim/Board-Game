@@ -1,16 +1,16 @@
-package application;
-
-import java.util.NoSuchElementException;
-
-public class NullDiceShaker implements DiceShaker {
-
-    @Override
-    public boolean hasNext() {
-        return false;
-    }
-
-    @Override
-    public int next() {
-        throw new NoSuchElementException();
-    }
-}
+//package application;
+//
+//import java.util.NoSuchElementException;
+//
+//public class NullDiceShaker implements DiceShaker {
+//
+//    @Override
+//    public boolean hasNext() {
+//        return false;
+//    }
+//
+//    @Override
+//    public int next() {
+//        throw new NoSuchElementException();
+//    }
+//}

@@ -22,6 +22,24 @@ class Blue {
         return POSITIONS[currentIndex];
     }
 
+    public int getIndex() {
+        return currentIndex;
+    }
+
+    public int peekPosition(int index) {
+        return POSITIONS[index];
+    }
+
+    public void setPosition(int position) {
+
+        for (int i = 0; i < POSITIONS.length; i++) {
+            if (POSITIONS[i] == position) {
+                currentIndex = i;
+                break;
+            }
+        }
+    }
+
     @Override
     public String toString() {
         if (isHome())
