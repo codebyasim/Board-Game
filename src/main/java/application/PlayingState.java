@@ -10,26 +10,34 @@ public class PlayingState implements GameState {
     private int round = 1;
     private int totalPlays = 0;
 
+    private final GameSession session;
+
+    public PlayingState(GameSession session) {
+        this.session = session;
+    }
+
     @Override
     public void play(GameContext context) {
 
+
+        System.out.println("Board: Large, Players: 4, Exact End + Bounce Back, Random Double Dice, Hit Rule Applied, Wormholes exist: 3: 34, 8: 22, Teleport Enabled");
         System.out.println("Game Playing...");
 
         Player red = new Red();
         Player blue = new Blue();
-        Player green = new Green();
         Player yellow = new Yellow();
+        Player green = new Green();
 
 
-        Player[] players = {red, blue, green, yellow};
+        Player[] players = {red, blue, yellow, green};
 
         System.out.println("Board: rows=6 columns=6");
         System.out.println("Number of players: " + players.length);
 
-        System.out.println("Red Home (Position 1), 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, End (Position 36)");
-        System.out.println("Blue Home (Position 31), 32, 33, 34, 35, 36, 25, 26, 27, 28, 29, 30, 19, 20, 21, 22, 23, 24, 13, 14, 15, 16, 17, 18, 7, 8, 9, 10, 11, 12, 1, 2, 3, 4, 5, End (Position 6)");
-        System.out.println("Yellow Home (Position 36), 35, 34, 33, 32, 31, 30, 29, 28, 27, 26, 25, 24, 23, 22, 21, 20, 19, 18, 17, 16, 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, End (Position 1)");
-        System.out.println("Green Home (Position 6), 5, 4, 3, 2, 1, 12, 11, 10, 9, 8, 7, 18, 17, 16, 15, 14, 13, 24, 23, 22, 21, 20, 19, 30, 29, 28, 27, 26, 25, 36, 35, 34, 33, 32, End (Position 31)");
+        System.out.println("Red Home (Position 1)");
+        System.out.println("Blue Home (Position 31)");
+        System.out.println("Yellow Home (Position 36)");
+        System.out.println("Green Home (Position 6)");
 
         System.out.println();
 
@@ -58,6 +66,8 @@ public class PlayingState implements GameState {
                     .toArray(Player[]::new);
 
             for (int roll : new DiceIterable(shaker)) {
+
+                session.getDiceRolls().add(roll);
 
                 boolean finished = mediator.handleTurn(
                         name, current, roll,

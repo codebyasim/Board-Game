@@ -13,9 +13,9 @@ public class GameConfig {
         return new EasyGameFactory();
     }
 
-    @Bean
-    @Profile("hard")
-    public GameFactory hardFactory() {
-        return new HardGameFactory();
-    }
+//    @Bean
+//    @Profile("hard")
+//    public GameFactory hardFactory() {
+//        return new HardGameFactory();
+//    }
 }

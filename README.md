@@ -7,3 +7,8 @@ Game Starting...
 Game Playing...
 aslo add dice rolls: before game over.
 
+````
+need dependency injection for two player.
+
+player turn should be according to spec.
+````

@@ -18,7 +18,6 @@ public class UseCase implements Provided {
     public Response handle(Request request) {
         int turn = request.getTurnNumber();
 
-        System.out.println("Turn " + turn);
 
         String last = required.load();
         System.out.println("Loaded: " + last);

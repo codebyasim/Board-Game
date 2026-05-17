@@ -6,7 +6,7 @@ public class EasyGameFactory implements GameFactory {
 
     @Override
     public DiceShaker createDiceShaker() {
-        return new RandomSingleDiceShaker();
+        return new RandomDoubleDiceShaker();
     }
 
     @Override

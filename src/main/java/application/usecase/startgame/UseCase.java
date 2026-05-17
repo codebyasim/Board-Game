@@ -24,9 +24,8 @@ public class UseCase implements Provided {
     public Response handle(Request request) {
 
         String mode = (factory instanceof EasyGameFactory) ? "Easy" : "Hard";
-        System.out.println("Game Mode: " + mode);
 
-        session.game = new GameContext(new StartState(), factory);
+        session.game = new GameContext(new StartState(session), factory);
 
         required.save("Game started");
 
